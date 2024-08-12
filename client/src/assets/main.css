@@ -1,0 +1,66 @@
+@import "open-props/style";
+
+
+
+body {
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-neo-grotesque);
+  font-size: var(--font-size-2);
+  margin: 0;
+  padding: 0;
+  background-color: #292929;
+  color: var(--gray-12)
+}
+
+button {
+  font-size: var(--font-size-3);
+  padding: var(--size-2);
+  border: none;
+  background-color: var(--gray-7);
+  color: var(--gray-0);
+  border-radius: var(--radius-2);
+  box-shadow: var(--shadow-2);
+}
+
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#app > header > nav {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background-color: var(--gray-9);
+  padding: var(--size-2) var(--size-3);
+  color: var(--gray-0);
+}
+
+#app > header > nav a {
+  color: var(--indigo-1);
+  text-decoration: none;
+}
+
+#app > header > nav > menu {
+  display: flex;
+  gap: var(--size-3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#app > main {
+  flex-grow: 1;
+}
+
+#app > header > nav {
+  background-color: rgb(29, 29, 29);
+}
+
+#app > footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--size-2);
+}
