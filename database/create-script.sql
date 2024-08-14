@@ -2,7 +2,7 @@
 --  Authentication and Authorization
 -- (Tables used by the authentication and authorization system)
 --------------------------------------------
-drop table if exists users, user_roles, provider, patient, ProviderContactDetails, PatientContactDetails;
+drop table if exists users, user_roles, provider, patient, ProviderContactDetails, PatientContactDetails, Demographics;
 create table users (
     username varchar(255) primary key,
     email varchar(255) UNIQUE,
@@ -40,10 +40,21 @@ CREATE TABLE Patient (
     LastName VARCHAR(255) NOT NULL,
     DOB DATE NOT NULL,
 	SSN VARCHAR(11) NOT NULL UNIQUE,
-    Gender VARCHAR(10) NOT NULL,
+    Gender VARCHAR(255) NOT NULL,
     InsuranceProvider VARCHAR(255) NOT NULL,
 	PCPID int,
 	FOREIGN KEY (PCPID) REFERENCES Provider(ID)
+);
+CREATE TABLE Demographics (
+	ID SERIAL PRIMARY KEY,
+    PatientId INT,
+	Age INT,
+	Religion VARCHAR(50),
+    Race VARCHAR(50),
+    Ethnicity VARCHAR(50),
+	PreferredLanguage VARCHAR(50),
+    MaritalStatus VARCHAR(20),
+    FOREIGN KEY (PatientId) REFERENCES Patient(ID) ON DELETE CASCADE
 );
 CREATE TABLE ProviderContactDetails (
     ID SERIAL PRIMARY KEY,
@@ -61,7 +72,6 @@ CREATE TABLE PatientContactDetails (
     Address VARCHAR(255),
     FOREIGN KEY (PatientID) REFERENCES Patient(ID) ON DELETE CASCADE
 );
-
 --Testing Data--
 INSERT INTO Provider (FirstName, LastName) VALUES
 	('John', 'Smith'),
@@ -161,6 +171,91 @@ INSERT INTO Patient (FirstName, LastName, DOB, SSN, Gender, InsuranceProvider, P
     ('Riley', 'Rodriguez', '1991-11-23', '012-01-0129', 'Female', 'CarePlus', 8),
     ('Jeremiah', 'White', '1993-02-20', '123-12-1241', 'Male', 'HealthFirst', 9),
     ('Nora', 'Anderson', '1990-08-14', '234-23-2352', 'Female', 'CarePlus', 10);
+INSERT INTO Demographics (PatientId, Age, Religion, Race, Ethnicity, PreferredLanguage, MaritalStatus) VALUES 
+	(1, 45, 'Christian', 'White', 'Non-Hispanic', 'English', 'Married'),
+	(2, 30, 'Muslim', 'Asian', 'Hispanic', 'Spanish', 'Single'),
+    (3, 28, 'Hindu', 'Black', 'Non-Hispanic', 'Hindi', 'Married'),
+    (4, 32, 'Buddhist', 'White', 'Hispanic', 'English', 'Divorced'),
+    (5, 29, 'Jewish', 'Asian', 'Non-Hispanic', 'Hebrew', 'Single'),
+    (6, 35, 'Christian', 'Black', 'Hispanic', 'French', 'Married'),
+    (7, 27, 'Atheist', 'White', 'Non-Hispanic', 'German', 'Single'),
+    (8, 33, 'Christian', 'Asian', 'Hispanic', 'Mandarin', 'Married'),
+    (9, 31, 'Muslim', 'Black', 'Non-Hispanic', 'Arabic', 'Divorced'),
+    (10, 34, 'Hindu', 'White', 'Hispanic', 'Tamil', 'Single'),
+    (11, 26, 'Buddhist', 'Asian', 'Non-Hispanic', 'Japanese', 'Married'),
+    (12, 36, 'Jewish', 'Black', 'Hispanic', 'Yiddish', 'Single'),
+    (13, 29, 'Christian', 'White', 'Non-Hispanic', 'Italian', 'Divorced'),
+    (14, 32, 'Atheist', 'Asian', 'Hispanic', 'Korean', 'Single'),
+    (15, 28, 'Muslim', 'Black', 'Non-Hispanic', 'Urdu', 'Married'),
+    (16, 35, 'Hindu', 'White', 'Hispanic', 'Gujarati', 'Single'),
+    (17, 27, 'Buddhist', 'Asian', 'Non-Hispanic', 'Vietnamese', 'Married'),
+    (18, 33, 'Jewish', 'Black', 'Hispanic', 'Russian', 'Single'),
+    (19, 31, 'Christian', 'White', 'Non-Hispanic', 'Portuguese', 'Divorced'),
+    (20, 34, 'Atheist', 'Asian', 'Hispanic', 'Thai', 'Single'),
+    (21, 26, 'Muslim', 'Black', 'Non-Hispanic', 'Bengali', 'Married'),
+    (22, 36, 'Hindu', 'White', 'Hispanic', 'Punjabi', 'Single'),
+    (23, 29, 'Buddhist', 'Asian', 'Non-Hispanic', 'Cantonese', 'Married'),
+    (24, 32, 'Jewish', 'Black', 'Hispanic', 'Polish', 'Single'),
+    (25, 28, 'Christian', 'White', 'Non-Hispanic', 'Dutch', 'Divorced'),
+    (26, 35, 'Atheist', 'Asian', 'Hispanic', 'Tagalog', 'Single'),
+    (27, 27, 'Muslim', 'Black', 'Non-Hispanic', 'Turkish', 'Married'),
+    (28, 33, 'Hindu', 'White', 'Hispanic', 'Marathi', 'Single'),
+    (29, 31, 'Buddhist', 'Asian', 'Non-Hispanic', 'Khmer', 'Married'),
+    (30, 34, 'Jewish', 'Black', 'Hispanic', 'Hungarian', 'Single'),
+    (31, 26, 'Christian', 'White', 'Non-Hispanic', 'Greek', 'Divorced'),
+    (32, 36, 'Atheist', 'Asian', 'Hispanic', 'Malay', 'Single'),
+    (33, 29, 'Muslim', 'Black', 'Non-Hispanic', 'Pashto', 'Married'),
+    (34, 32, 'Hindu', 'White', 'Hispanic', 'Sinhala', 'Single'),
+    (35, 28, 'Buddhist', 'Asian', 'Non-Hispanic', 'Burmese', 'Married'),
+    (36, 35, 'Jewish', 'Black', 'Hispanic', 'Czech', 'Single'),
+    (37, 27, 'Christian', 'White', 'Non-Hispanic', 'Swedish', 'Divorced'),
+    (38, 33, 'Atheist', 'Asian', 'Hispanic', 'Finnish', 'Single'),
+    (39, 31, 'Muslim', 'Black', 'Non-Hispanic', 'Somali', 'Married'),
+    (40, 34, 'Hindu', 'White', 'Hispanic', 'Nepali', 'Single'),
+    (41, 26, 'Buddhist', 'Asian', 'Non-Hispanic', 'Lao', 'Married'),
+    (42, 36, 'Jewish', 'Black', 'Hispanic', 'Slovak', 'Single'),
+    (43, 29, 'Christian', 'White', 'Non-Hispanic', 'Norwegian', 'Divorced'),
+    (44, 32, 'Atheist', 'Asian', 'Hispanic', 'Danish', 'Single'),
+    (45, 28, 'Muslim', 'Black', 'Non-Hispanic', 'Swahili', 'Married'),
+    (46, 35, 'Hindu', 'White', 'Hispanic', 'Telugu', 'Single'),
+    (47, 27, 'Buddhist', 'Asian', 'Non-Hispanic', 'Javanese', 'Married'),
+    (48, 33, 'Jewish', 'Black', 'Hispanic', 'Lithuanian', 'Single'),
+    (49, 31, 'Christian', 'White', 'Non-Hispanic', 'Romanian', 'Divorced'),
+    (50, 34, 'Atheist', 'Asian', 'Hispanic', 'Bulgarian', 'Single'),
+    (51, 26, 'Muslim', 'Black', 'Non-Hispanic', 'Amharic', 'Married'),
+    (52, 36, 'Hindu', 'White', 'Hispanic', 'Kannada', 'Single'),
+    (53, 29, 'Buddhist', 'Asian', 'Non-Hispanic', 'Tibetan', 'Married'),
+    (54, 32, 'Jewish', 'Black', 'Hispanic', 'Serbian', 'Single'),
+    (55, 28, 'Christian', 'White', 'Non-Hispanic', 'Croatian', 'Divorced'),
+    (56, 35, 'Atheist', 'Asian', 'Hispanic', 'Uzbek', 'Single'),
+    (57, 27, 'Muslim', 'Black', 'Non-Hispanic', 'Kazakh', 'Married'),
+    (58, 33, 'Hindu', 'White', 'Hispanic', 'Bengali', 'Single'),
+    (59, 31, 'Buddhist', 'Asian', 'Non-Hispanic', 'Mongolian', 'Married'),
+    (60, 34, 'Jewish', 'Black', 'Hispanic', 'Ukrainian', 'Single'),
+    (61, 26, 'Christian', 'White', 'Non-Hispanic', 'Belarusian', 'Divorced'),
+    (62, 36, 'Atheist', 'Asian', 'Hispanic', 'Georgian', 'Single'),
+    (63, 29, 'Muslim', 'Black', 'Non-Hispanic', 'Armenian', 'Married'),
+    (64, 32, 'Hindu', 'White', 'Hispanic', 'Azerbaijani', 'Single'),
+    (65, 28, 'Buddhist', 'Asian', 'Non-Hispanic', 'Kyrgyz', 'Married'),
+    (66, 35, 'Jewish', 'Black', 'Hispanic', 'Tajik', 'Single'),
+    (67, 27, 'Christian', 'White', 'Non-Hispanic', 'Turkmen', 'Divorced'),
+    (68, 33, 'Atheist', 'Asian', 'Hispanic', 'Estonian', 'Single'),
+    (69, 31, 'Muslim', 'Black', 'Non-Hispanic', 'Latvian', 'Married'),
+    (70, 34, 'Hindu', 'White', 'Hispanic', 'Macedonian', 'Single'),
+    (71, 26, 'Buddhist', 'Asian', 'Non-Hispanic', 'Bosnian', 'Married'),
+    (72, 36, 'Jewish', 'Black', 'Hispanic', 'Albanian', 'Single'),
+    (73, 29, 'Christian', 'White', 'Non-Hispanic', 'Montenegrin', 'Divorced'),
+    (74, 32, 'Atheist', 'Asian', 'Hispanic', 'Kosovar', 'Single'),
+    (75, 28, 'Muslim', 'Black', 'Non-Hispanic', 'Maltese', 'Married'),
+    (76, 35, 'Hindu', 'White', 'Hispanic', 'Icelandic', 'Single'),
+    (77, 27, 'Buddhist', 'Asian', 'Non-Hispanic', 'Luxembourgish', 'Married'),
+    (78, 33, 'Jewish', 'Black', 'Hispanic', 'Monacan', 'Single'),
+    (79, 31, 'Christian', 'White', 'Non-Hispanic', 'Andorran', 'Divorced'),
+    (80, 34, 'Atheist', 'Asian', 'Hispanic', 'Liechtenstein', 'Single'),
+    (81, 26, 'Muslim', 'Black', 'Non-Hispanic', 'San Marinese', 'Married'),
+    (82, 36, 'Hindu', 'White', 'Hispanic', 'Vatican', 'Single'),
+    (83, 29, 'Buddhist', 'Asian', 'Non-Hispanic', 'Gibraltarian', 'Married'),
+    (84, 32, 'Jewish', 'Black', 'Hispanic', 'Faroese', 'Single');	
 INSERT INTO ProviderContactDetails (ProviderID, PhoneNumber, Email, Address) VALUES
 -- Contact details for providers
 	(1, '555-123-4567', 'john.smith@example.com', '123 Main St'),

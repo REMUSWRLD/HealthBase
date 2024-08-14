@@ -25,5 +25,20 @@ export default {
     
     deletePatient(id) {
         return axios.delete(`/api/patients/${id}`, { headers: { Authorization: `Bearer ${store.state.token}` } });
-    }
+    },
+
+    //Patient Contact Detail Service
+
+    getContact(id){
+        return axios.get(`/api/patients/${id}/contact`, {headers:{Authorization: `Bearer ${store.state.token}`}});
+    },
+
+
+
+
+    //Demographic Service
+
+    getDemographics(id){
+        return axios.get(`/api/patients/${id}/demographics`, {headers:{Authorization: `Bearer ${store.state.token}`}});
+    },
 }

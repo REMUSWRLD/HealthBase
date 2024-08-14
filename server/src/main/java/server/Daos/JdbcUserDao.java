@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import server.Daos.Interface.UserDao;
 import server.Models.User;
 
 @Component

@@ -2,6 +2,7 @@ package server.Daos;
 
 import java.util.*;
 
+import server.Daos.Interface.ProviderDao;
 import server.exception.DaoException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;

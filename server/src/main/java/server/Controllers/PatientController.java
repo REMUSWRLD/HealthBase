@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import server.Daos.PatientDao;
+import server.Daos.Interface.PatientDao;
 import server.Models.Patient;
+
+import server.Daos.Interface.PatientContactDao;
+import server.Models.PatientContact;
+
+import server.Daos.Interface.DemographicsDao;
+import server.Models.Demographics;
 
 @RestController
 @RequestMapping("/api/patients")
@@ -57,4 +62,57 @@ public class PatientController {
     @DeleteMapping("/{id}")
     public void deletePatient(@PathVariable int id) {patientDao.deletePatient(id);}
 
+    //PATIENT CONTACT CONTROLLER
+    @Autowired
+    private PatientContactDao patientContactDao;
+
+    @GetMapping("/{id}/contact")
+    public PatientContact getPatientContactByPatientId(@PathVariable int id) {
+        return patientContactDao.getPatientContactByPatientId(id);
+    }
+
+    @PostMapping("/{id}/contact")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createPatientContact(@PathVariable int id, @RequestBody PatientContact patientContact) {
+        patientContact.setPatientId(id);
+        patientContactDao.createPatientContact(patientContact);
+    }
+
+    @PutMapping("/{id}/contact")
+    public void updatePatientContact(@PathVariable int id, @RequestBody PatientContact updatedPatientContact) {
+        updatedPatientContact.setPatientId(id);
+        patientContactDao.updatePatientContact(updatedPatientContact);
+    }
+
+    @DeleteMapping("/{id}/contact")
+    public void deletePatientContact(@PathVariable int id) {
+        patientContactDao.deletePatientContact(id);
+    }
+
+    //DEMOGRAPHICS CONTROLLER
+    @Autowired
+    private DemographicsDao demographicsDao;
+
+    @GetMapping("/{id}/demographics")
+    public Demographics getDemographicsByPatientId(@PathVariable int id) {
+        return demographicsDao.getDemographicsByPatientId(id);
+    }
+
+    @PostMapping("/{id}/demographics")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createDemographics(@PathVariable int id, @RequestBody Demographics demographics) {
+        demographics.setPatientId(id);
+        demographicsDao.createDemographics(demographics);
+    }
+
+    @PutMapping("/{id}/demographics")
+    public void updateDemographics(@PathVariable int id, @RequestBody Demographics updatedDemographics) {
+        updatedDemographics.setPatientId(id);
+        demographicsDao.updateDemographics(updatedDemographics);
+    }
+
+    @DeleteMapping("/{id}/demographics")
+    public void deleteDemographics(@PathVariable int id) {
+        demographicsDao.deleteDemographics(id);
+    }
 }

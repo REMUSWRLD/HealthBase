@@ -1,7 +1,7 @@
 package server.Services;
 
 import eu.fraho.spring.securityJwt.base.dto.JwtUser;
-import server.Daos.UserDao;
+import server.Daos.Interface.UserDao;
 import server.Models.User;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

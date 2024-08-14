@@ -2,7 +2,7 @@ package server.Daos;
 
 import java.util.*;
 
-import org.springframework.security.core.parameters.P;
+import server.Daos.Interface.PatientDao;
 import server.exception.DaoException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
@@ -14,7 +14,7 @@ import server.Models.Patient;
 import javax.sql.DataSource;
 
 @Component
-public class JdbcPatientDao implements PatientDao{
+public class JdbcPatientDao implements PatientDao {
     private final JdbcTemplate template;
     public JdbcPatientDao(DataSource dataSource) {
         template = new JdbcTemplate(dataSource);
@@ -85,14 +85,26 @@ public class JdbcPatientDao implements PatientDao{
 
     @Override
     public void updatePatient(Patient updatedPatient) {
-        template.update("UPDATE Patient SET id =?, firstname =?, lastname =?, dob =?, ssn =?, gender =?, insuranceProvider =?, pcpid =? WHERE id =?",
-                updatedPatient.getId(), updatedPatient.getFirstName(), updatedPatient.getLastName(), updatedPatient.getDateOfBirth(), updatedPatient.getSocialSecurityNumber(), updatedPatient.getGender(), updatedPatient.getInsuranceProvider(), updatedPatient.getPrimaryCareProviderId(), updatedPatient.getId());
+        String sql = "UPDATE Patient SET firstname =?, lastname =?, dob =?, ssn =?, gender =?, insuranceProvider =?, pcpid =? WHERE id =?";
+        try {
+            template.update(sql, updatedPatient.getFirstName(), updatedPatient.getLastName(), updatedPatient.getDateOfBirth(), updatedPatient.getSocialSecurityNumber(), updatedPatient.getGender(), updatedPatient.getInsuranceProvider(), updatedPatient.getPrimaryCareProviderId(), updatedPatient.getId());
+        } catch (DataIntegrityViolationException e) {
+            throw new DaoException("An error occurred updating the patient with ID " + updatedPatient.getId(), e);
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to the database", e);
+        }
     }
 
     @Override
     public void deletePatient(int id) {
         String sql = "DELETE FROM Patient WHERE id =?";
-        template.update(sql, id);
+        try {
+            template.update(sql, id);
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to the database", e);
+        } catch (Exception e) {
+            throw new DaoException("An error occurred while deleting patient with ID " + id, e);
+        }
     }
 
 

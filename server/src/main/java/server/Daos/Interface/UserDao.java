@@ -1,4 +1,4 @@
-package server.Daos;
+package server.Daos.Interface;
 
 import server.Models.User;
 

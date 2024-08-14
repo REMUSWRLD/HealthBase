@@ -39,9 +39,6 @@
   <main>
     <RouterView />
   </main>
-  <footer>
-    <p v-if="$store.state.user">&copy; 2024</p>
-  </footer>
 </template>
 
 <style scoped>

@@ -22,5 +22,12 @@ export default {
     
     deleteProvider(id) {
         return axios.delete(`/api/providers/${id}`, { headers: { Authorization: `Bearer ${store.state.token}` } });
+    },
+
+    //Provider Contact Detail Service
+
+    getContact(id){
+        return axios.get(`/api/providers/${id}/contact`, {headers:{Authorization: `Bearer ${store.state.token}` } });
     }
+ 
 }

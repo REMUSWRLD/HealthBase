@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import server.Daos.UserDao;
+import server.Daos.Interface.UserDao;
 import server.Models.User;
 import org.springframework.web.bind.annotation.RequestParam;
 

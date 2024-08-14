@@ -17,7 +17,8 @@
         isEditing: false,
         isDeleting: false,
         isModifying: false,
-        searchTerm: ''
+        searchTerm: '',
+        providerSearchTerm: ''
       }
     },
     created() {
@@ -48,9 +49,9 @@
       deletePatient(id) {
         patientService.deletePatient(id).then(response => {
           console.log(response);
-          this.getPatients();
         });
       },
+
       getProviders() {
         providerService.getProviders().then(response => {
           this.providers = response.data;
@@ -83,7 +84,7 @@
           }  
         } else {
           if(this.searchTerm.length <= 0){
-            this.patients = this.getPatients();
+            this.getPatients();
           } else {
             this.patients = this.patients.filter(patient => {
             return (
@@ -91,9 +92,23 @@
               patient.lastName.toLowerCase().includes(this.searchTerm.toLowerCase())
             );
           });
+          }
         }
+      },
+      filterProviders() {
+        if(this.providerSearchTerm.length <= 0){
+          this.getProviders();
+        } else {
+        this.providers = this.providers.filter(provider => {
+          return (
+            provider.firstName.toLowerCase().includes(this.providerSearchTerm.toLowerCase()) ||
+            provider.lastName.toLowerCase().includes(this.providerSearchTerm.toLowerCase())
+          );
+        });
+        console.log(this.providerSearchTerm)
       }
-    },
+      },
+    
       toggleProvider(providerId) {
         if (this.expandedProviderCard === providerId) {
           this.expandedProviderCard = null;
@@ -162,6 +177,7 @@
           <button>Edit</button>
           <button>Delete</button>
         </section>
+        <input @input="filterProviders()" type="text" placeholder="Search" v-model="this.providerSearchTerm">
       </div>
 
       
@@ -172,7 +188,7 @@
           <div v-if="expandedProviderCard === provider.id" class="expandable-provider-content">
             <button @click.stop="navigateToProvider(provider.id), console.log(provider)">Details</button>
             <button @click.stop="getPatientsByPCP(provider.id), currentPCP = provider, editingPatient.primaryCareProviderId = currentPCP.id">View Patients</button>
-          </div>
+          </div>          
           
         </section>
       </article>
@@ -199,9 +215,9 @@
       
       </div>
       <div class="patient-panel" :class="{ 'full-height': !isModifying}">
-        <section v-for="patient in patients" :key="patient.id" class="patient-card" @click="navigateToPatient(patient.id)">
-          <p>{{ patient.lastName }}, {{ patient.firstName }} </p>
-          <section v-if="isDeleting" @click="deletePatient(patient.id)" class="delete">
+        <section v-for="patient in patients" :key="patient.id" class="patient-card">
+          <p @click="navigateToPatient(patient.id)" style="cursor: pointer;">{{ patient.lastName }}, {{ patient.firstName }} </p>
+          <section v-if="isDeleting" @click="deletePatient(patient.id), getPatientsByPCP(this.currentPCP.id)" class="delete">
           <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-octagon" viewBox="0 0 16 16">
             <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -210,7 +226,7 @@
         </section>
       </div>
       <div class="edit-add-container" v-if="isModifying">
-        <div v-if="isEditing" class="search-bar">
+        <div v-if="isEditing" class="editing-search-bar">
           <input type="text" placeholder="Search" v-model="this.searchTerm">
           <button @click="filterPatients()">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 30">
@@ -293,20 +309,28 @@
 .left-panel-header {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 20px;
   justify-content: space-between;
   align-items: center;
+}
+.left-panel-header input {
+  padding: 5px;
+  height: 20px;
+  width: 80%;
+  border-radius: 50px;
 }
 .left-panel-header .expanded-provider-menu {
   gap: 20px;
   display: flex;
   flex-direction: column;
   grid-column: 2/3;
-  grid-row: 2/3
+  grid-row: 2/4
 }
 .provider-panel {
   flex: 1;
   overflow-y: auto;
   margin-bottom: 80px;
+  margin-top: 10px;
   scrollbar-color: white transparent;
 }
 
@@ -361,7 +385,8 @@ button:hover {
 }
 .patient-header input {
   border-radius: 50px;
-  height: 30px;
+  padding: 5px;
+  height: 30%;
 }
 .expanded-patient-menu {
   gap: 20px;
@@ -385,7 +410,7 @@ button:hover {
 
 .full-height {
     grid-row: 2/4;
-    margin-bottom: 80px;
+    margin-bottom: 75px;
     padding-bottom: 0px;
 }
 
@@ -401,7 +426,6 @@ button:hover {
   background-color: rgb(29, 29, 29);
   transition: background-color 0.4s;
   box-shadow: var(--shadow-2);
-  cursor: pointer;
 }
 .patient-card:hover {
   transform: scale(1.01);
@@ -421,12 +445,16 @@ button:hover {
   background-color: red;
   color: white;
 }
+.delete {
+  padding-top: 5px;
+  cursor: pointer;
+}
 .edit-add-container {
   margin-left: 15px;
   margin-right: 25px;
   display: grid;
   grid-template-columns: 20% 1fr 1fr;
-  height: 80%;
+  height: 82%;
   background-color: rgb(29, 29, 29);
   border-radius: 50px;
 }
@@ -435,7 +463,7 @@ button:hover {
   height: 20px;
 }
 
-.search-bar {
+.editing-search-bar {
   background-color: transparent;
   display: flex;
   margin: 20px;
@@ -445,14 +473,14 @@ button:hover {
   grid-row: 1;
 }
 
-.search-bar button, input {
+.editing-search-bar button, input {
   background-color: transparent;
   color: white;
   border: none;
   box-shadow: none;
 
 }
-.search-bar input {
+.editing-search-bar input {
   padding: 5px;
   border-radius: 50px;
   width: 100%;
@@ -488,7 +516,7 @@ button:hover {
   background-color: #292929;
   margin: 20px;
   padding: 20px;
-  height: 250px;
+  height: 260px;
   border-radius: 35px;
   grid-column: 2/4;
   grid-row: 1/4;
@@ -514,6 +542,8 @@ button:hover {
   border-radius: 50px;
 }
 .edit-add-card button{
+  margin-top: 0px;
+  padding: 0px;
   grid-column: 2/3;
   background-color: transparent;
   box-shadow: none;
