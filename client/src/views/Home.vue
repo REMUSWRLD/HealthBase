@@ -49,6 +49,13 @@
       deletePatient(id) {
         patientService.deletePatient(id).then(response => {
           console.log(response);
+          if (this.currentPCP.id) {
+            this.getPatientsByPCP(this.currentPCP.id);
+          } else if (this.searchTerm) {
+            this.filterPatients();
+          } else {
+            this.getPatients();
+          }
         });
       },
 
@@ -75,23 +82,27 @@
           if(this.searchTerm.length <= 0){
             this.searchedPatients = this.patients;
           } else {
-            this.searchedPatients = this.patients.filter(patient => {
-            return (
-              patient.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-              patient.lastName.toLowerCase().includes(this.searchTerm.toLowerCase())
-            );
-          });
+            patientService.getPatients().then(response => {
+              this.searchedPatients = response.data.filter(patient => {
+                return (
+                  patient.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                  patient.lastName.toLowerCase().includes(this.searchTerm.toLowerCase())
+                );
+              });
+            });          
           }  
         } else {
           if(this.searchTerm.length <= 0){
             this.getPatients();
           } else {
-            this.patients = this.patients.filter(patient => {
-            return (
-              patient.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-              patient.lastName.toLowerCase().includes(this.searchTerm.toLowerCase())
-            );
-          });
+            patientService.getPatients().then(response => {
+              this.patients = response.data.filter(patient => {
+                return (
+                  patient.firstName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                  patient.lastName.toLowerCase().includes(this.searchTerm.toLowerCase())
+                );
+              });
+            });
           }
         }
       },
@@ -99,11 +110,13 @@
         if(this.providerSearchTerm.length <= 0){
           this.getProviders();
         } else {
-        this.providers = this.providers.filter(provider => {
-          return (
-            provider.firstName.toLowerCase().includes(this.providerSearchTerm.toLowerCase()) ||
-            provider.lastName.toLowerCase().includes(this.providerSearchTerm.toLowerCase())
-          );
+        providerService.getProviders().then(response => {
+          this.providers = response.data.filter(provider => {
+            return (
+              provider.firstName.toLowerCase().includes(this.providerSearchTerm.toLowerCase()) ||
+              provider.lastName.toLowerCase().includes(this.providerSearchTerm.toLowerCase())
+            );
+          });
         });
         console.log(this.providerSearchTerm)
       }
@@ -139,6 +152,7 @@
         }
         this.isEditing = !this.isEditing;
         this.isModifying = !this.isModifying;
+        this.searchTerm = '';
       },
       toggleDelete() {
         if(this.isEditing || this.isAdding || this.isModifying) {
@@ -174,7 +188,6 @@
         </button>
         <section v-if="expandedProviderMenu === true" class="expanded-provider-menu">        
           <button>Add</button>
-          <button>Edit</button>
           <button>Delete</button>
         </section>
         <input @input="filterProviders()" type="text" placeholder="Search" v-model="this.providerSearchTerm">
@@ -187,7 +200,7 @@
           <p>Dr. {{ provider.firstName }} {{ provider.lastName }}</p>
           <div v-if="expandedProviderCard === provider.id" class="expandable-provider-content">
             <button @click.stop="navigateToProvider(provider.id), console.log(provider)">Details</button>
-            <button @click.stop="getPatientsByPCP(provider.id), currentPCP = provider, editingPatient.primaryCareProviderId = currentPCP.id">View Patients</button>
+            <button @click.stop="getPatientsByPCP(provider.id),  currentPCP = provider, editingPatient.primaryCareProviderId = currentPCP.id">View Patients</button>
           </div>          
           
         </section>
@@ -217,22 +230,18 @@
       <div class="patient-panel" :class="{ 'full-height': !isModifying}">
         <section v-for="patient in patients" :key="patient.id" class="patient-card">
           <p @click="navigateToPatient(patient.id)" style="cursor: pointer;">{{ patient.lastName }}, {{ patient.firstName }} </p>
-          <section v-if="isDeleting" @click="deletePatient(patient.id), getPatientsByPCP(this.currentPCP.id)" class="delete">
+          <section v-if="isDeleting" @click="deletePatient(patient.id)" class="delete">
           <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-octagon" viewBox="0 0 16 16">
             <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-          </svg>
-          </section>
+          </svg>          
+          </section>          
         </section>
       </div>
       <div class="edit-add-container" v-if="isModifying">
         <div v-if="isEditing" class="editing-search-bar">
-          <input type="text" placeholder="Search" v-model="this.searchTerm">
-          <button @click="filterPatients()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 30">
-                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
-            </svg>
-          </button>
+          <input type="text" placeholder="Search" @input="filterPatients()" v-model="this.searchTerm">
+          
         </div>
 
         <div v-if="isEditing" class="searched-patients">
@@ -354,9 +363,6 @@
   font-size: medium;
 }
 
-button {
-  cursor: pointer;
-}
 .provider-card:hover {
   transform: scale(1.05);
   transition: transform 0.3s;
@@ -364,10 +370,7 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  transform: scale(1.05);
-  transition: transform 0.3s;
-}
+
 .right-panel {
   display: grid;
   grid-template-rows: 80px 1fr 45% ;
@@ -482,7 +485,6 @@ button:hover {
 }
 .editing-search-bar input {
   padding: 5px;
-  border-radius: 50px;
   width: 100%;
 }
 .searched-patients {

@@ -21,6 +21,7 @@ button {
   color: var(--gray-0);
   border-radius: var(--radius-2);
   box-shadow: var(--shadow-2);
+  cursor: pointer;
 }
 
 #app {
@@ -63,4 +64,14 @@ button {
   align-items: center;
   justify-content: center;
   padding-inline: var(--size-2);
+}
+button:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s;
+}
+
+input, select{
+  background-color: transparent;
+  color: white;
+  border-radius: 50px;
 }

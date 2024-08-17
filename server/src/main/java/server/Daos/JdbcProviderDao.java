@@ -51,16 +51,16 @@ public class JdbcProviderDao implements ProviderDao {
     @Override
     public void createProvider(Provider newProvider) {
         template.update(
-                "INSERT INTO Provider (FirstName, LastName) VALUES (?, ?)",
-                newProvider.getFirstName(), newProvider.getLastName()
+                "INSERT INTO Provider (FirstName, LastName, Credentials, Specialty, IsAcceptingNewPatients, LanguagesSpoken) VALUES (?, ?, ?, ?, ?, ?)",
+                newProvider.getFirstName(), newProvider.getLastName(), newProvider.getCredentials(), newProvider.getSpecialty(), newProvider.isAcceptingNewPatients(), newProvider.getLanguagesSpoken()
         );
     }
 
     @Override
     public void updateProvider(Provider provider) {
         template.update(
-                "UPDATE Provider SET FirstName =?, LastName =? WHERE ID =?",
-                provider.getFirstName(), provider.getLastName(), provider.getId()
+                "UPDATE Provider SET FirstName =?, LastName =?, Credentials =?, Specialty =?, IsAcceptingNewPatients =?, LanguagesSpoken =? WHERE ID =?",
+                provider.getFirstName(), provider.getLastName(), provider.getCredentials(), provider.getSpecialty(), provider.isAcceptingNewPatients(), provider.getLanguagesSpoken(), provider.getId()
         );
     }
 
@@ -78,6 +78,10 @@ public class JdbcProviderDao implements ProviderDao {
         provider.setId(rs.getInt("ID"));
         provider.setFirstName(rs.getString("FirstName"));
         provider.setLastName(rs.getString("LastName"));
+        provider.setCredentials(rs.getString("Credentials"));
+        provider.setSpecialty(rs.getString("Specialty"));
+        provider.setAcceptingNewPatients(rs.getBoolean("IsAcceptingNewPatients"));
+        provider.setLanguagesSpoken(rs.getString("LanguagesSpoken"));
         return provider;
     }
 }

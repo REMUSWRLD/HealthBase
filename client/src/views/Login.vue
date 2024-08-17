@@ -52,7 +52,6 @@ export default {
 </script>
 
 <template>
-    <header></header>
     <body>
            
         <form @submit.prevent="login" id="login-container">
@@ -99,9 +98,6 @@ export default {
             </fieldset>
         </form>
     </body>
-    <footer>
-        <p>&copy; 2023 EMR. All rights reserved.</p>
-    </footer>
 </template>
 
 <style scoped>
