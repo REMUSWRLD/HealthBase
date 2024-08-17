@@ -167,6 +167,7 @@ export default {
         border-color: #c9c9c9;
         border-radius: 50px;
         padding: 10px;
+        color: black;
     }
 
     button {

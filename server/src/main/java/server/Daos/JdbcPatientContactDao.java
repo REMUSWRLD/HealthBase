@@ -36,7 +36,7 @@ public class JdbcPatientContactDao implements PatientContactDao {
     }
 
     @Override
-    public void createPatientContact(PatientContact patientContact) {
+    public void createPatientContact(int id, PatientContact patientContact) {
         String sql="INSERT INTO PatientContactDetails (PatientId, PhoneNumber, Email, Address) VALUES (?,?,?,?)";
         try {
             template.update(sql, patientContact.getPatientId(), patientContact.getPhoneNumber(), patientContact.getEmail(), patientContact.getAddress());

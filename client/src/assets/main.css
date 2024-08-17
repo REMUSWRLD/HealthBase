@@ -10,7 +10,8 @@ body {
   margin: 0;
   padding: 0;
   background-color: #292929;
-  color: var(--gray-12)
+  color: var(--gray-12);
+  scrollbar-color: rgb(97, 97, 97) transparent;
 }
 
 button {

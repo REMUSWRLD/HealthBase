@@ -217,8 +217,8 @@
         </svg>
       </button>
       <section v-if="expandedPatientMenu === true" class="expanded-patient-menu">
-        <button v-if="currentPCP.id != null" @click="getPatients(), currentPCP = {}">View All Patients</button>
-        <button v-if="currentPCP.id != null" @click="toggleAdd(), console.log(isAdding)" class="adding-button" :class="{'active-adding-button': isAdding}">Add</button>
+        <button v-if="currentPCP.id != null" @click="getPatients(), currentPCP = {}">View All Patients</button>        
+        <button v-if="currentPCP.id != null" @click="toggleAdd(), console.log(isAdding)" class="adding-button" :class="{'active-adding-button': isAdding}">Add</button>        
         <button @click="toggleEdit(), console.log(isEditing)" class="editing-button" :class="{'active-editing-button': isEditing}">Edit</button>
         <button @click="toggleDelete(), console.log(isDeleting)" class="delete-button" :class="{'active-delete-button': isDeleting}">Delete</button>
       </section>
@@ -340,7 +340,6 @@
   overflow-y: auto;
   margin-bottom: 80px;
   margin-top: 10px;
-  scrollbar-color: white transparent;
 }
 
 .provider-card{
@@ -408,7 +407,6 @@
   grid-row: 2;
   overflow-y: auto;
   margin-bottom: 10px;
-  scrollbar-color: white transparent; 
 }
 
 .full-height {
@@ -497,7 +495,6 @@
   padding: 5px;
   transition: background-color 0.4s;
   cursor: pointer;
-  scrollbar-color: white transparent; 
 }
 .result-card{
   box-shadow: var(--shadow-2);

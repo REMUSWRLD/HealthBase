@@ -23,7 +23,7 @@ public class JdbcPatientDao implements PatientDao {
     @Override
     public List<Patient> getAllPatients() {
         List<Patient> patients = new ArrayList<>();
-        String sql = "SELECT * FROM Patient ORDER BY id";
+        String sql = "SELECT * FROM Patient ORDER BY firstName ASC";
         try {
             SqlRowSet results = template.queryForRowSet(sql);
             while (results.next()) {
@@ -40,7 +40,7 @@ public class JdbcPatientDao implements PatientDao {
     @Override
     public List<Patient> getPatientsByPrimaryCareProviderId(int id) {
         List<Patient> patients = new ArrayList<>();
-        String sql = "SELECT * FROM Patient WHERE pcpid =?";
+        String sql = "SELECT * FROM Patient WHERE pcpid =? ORDER BY firstName ASC";
         try {
             SqlRowSet results = template.queryForRowSet(sql, id);
             while (results.next()) {
@@ -57,7 +57,7 @@ public class JdbcPatientDao implements PatientDao {
     @Override
     public Patient getPatientById(int id) {
         Patient patient = null;
-        String sql = "SELECT * FROM Patient WHERE id =?";
+        String sql = "SELECT * FROM Patient WHERE id =? ";
         try {
             SqlRowSet results = template.queryForRowSet(sql, id);
             if (results.next()) {

@@ -5,7 +5,7 @@ import server.Models.PatientContact;
 public interface PatientContactDao {
     PatientContact getPatientContactByPatientId(int id);
 
-    void createPatientContact(PatientContact patientContact);
+    void createPatientContact(int id, PatientContact patientContact);
 
     void updatePatientContact(PatientContact patientContact);
 

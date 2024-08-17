@@ -73,9 +73,8 @@ public class PatientController {
 
     @PostMapping("/{id}/contact")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPatientContact(@PathVariable int id, @RequestBody PatientContact patientContact) {
-        patientContact.setPatientId(id);
-        patientContactDao.createPatientContact(patientContact);
+    public void createPatientContact( @PathVariable int id, @RequestBody PatientContact patientContact) {
+        patientContactDao.createPatientContact(id, patientContact);
     }
 
     @PutMapping("/{id}/contact")

@@ -33,12 +33,13 @@ export default {
         return axios.get(`/api/patients/${id}/contact`, {headers:{Authorization: `Bearer ${store.state.token}`}});
     },
 
-
-
+    updateContact(id, contact){
+        return axios.put(`/api/patients/${id}/contact`, contact, {headers:{Authorization: `Bearer ${store.state.token}`}});
+    },
 
     //Demographic Service
 
     getDemographics(id){
         return axios.get(`/api/patients/${id}/demographics`, {headers:{Authorization: `Bearer ${store.state.token}`}});
-    },
+    }
 }

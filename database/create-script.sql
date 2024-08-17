@@ -32,8 +32,13 @@ insert into user_roles (username, role) values ('admin', 'ADMIN');
 CREATE TABLE Provider (
     ID SERIAL PRIMARY KEY,
     FirstName VARCHAR(255) NOT NULL,
-    LastName VARCHAR(255) NOT NULL
+    LastName VARCHAR(255) NOT NULL,
+    Credentials VARCHAR(50) NOT NULL,  
+    Specialty VARCHAR(255) NOT NULL,     
+    IsAcceptingNewPatients BOOLEAN NOT NULL,
+    LanguagesSpoken VARCHAR(255) NOT NULL 
 );
+
 CREATE TABLE Patient (
     ID SERIAL PRIMARY KEY,
     FirstName VARCHAR(255) NOT NULL,
@@ -73,19 +78,19 @@ CREATE TABLE PatientContactDetails (
     FOREIGN KEY (PatientID) REFERENCES Patient(ID) ON DELETE CASCADE
 );
 --Testing Data--
-INSERT INTO Provider (FirstName, LastName) VALUES
-	('John', 'Smith'),
-    ('Emily', 'Davis'),
-    ('Michael', 'Brown'),
-    ('Sarah', 'Wilson'),
-    ('David', 'Taylor'),
-    ('Laura', 'Anderson'),
-    ('James', 'Thomas'),
-    ('Linda', 'Jackson'),
-    ('Robert', 'White'),
-    ('Patricia', 'Harris'),
-    ('Charles', 'Martin'),
-    ('Barbara', 'Thompson');
+INSERT INTO Provider (FirstName, LastName, Credentials, Specialty, IsAcceptingNewPatients, LanguagesSpoken) VALUES
+    ('John', 'Smith', 'MD', 'Cardiology', TRUE, 'English, Spanish'),
+    ('Emily', 'Davis', 'DO', 'Pediatrics', FALSE, 'English, French'),
+    ('Michael', 'Brown', 'NP', 'Dermatology', TRUE, 'English, German'),
+    ('Sarah', 'Wilson', 'MD', 'Neurology', TRUE, 'English, Mandarin'),
+    ('David', 'Taylor', 'DO', 'Orthopedics', FALSE, 'English, Spanish'),
+    ('Laura', 'Anderson', 'MD', 'General Surgery', TRUE, 'English, Italian'),
+    ('James', 'Thomas', 'PA', 'Family Medicine', TRUE, 'English, Russian'),
+    ('Linda', 'Jackson', 'MD', 'Psychiatry', FALSE, 'English, Portuguese'),
+    ('Robert', 'White', 'DO', 'Ophthalmology', TRUE, 'English, Korean'),
+    ('Patricia', 'Harris', 'NP', 'Geriatrics', FALSE, 'English, Vietnamese'),
+    ('Charles', 'Martin', 'MD', 'Cardiology', TRUE, 'English, Arabic'),
+    ('Barbara', 'Thompson', 'DO', 'Obstetrics and Gynecology', TRUE, 'English, Japanese');
 INSERT INTO Patient (FirstName, LastName, DOB, SSN, Gender, InsuranceProvider, PCPID) VALUES 
 	('Alice', 'Johnson', '1985-04-23', '123-45-6789', 'Female', 'HealthFirst', 1),
     ('Bob', 'Williams', '1990-09-12', '987-65-4321', 'Male', 'CarePlus', 2),
