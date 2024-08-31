@@ -53,7 +53,7 @@ export default {
 
 <template>
     <body>
-           
+        
         <form @submit.prevent="login" id="login-container">
             <h1>Login</h1>
             <p class="login-error" v-if="loginError">{{ loginError }}</p>
@@ -97,6 +97,8 @@ export default {
                 <button type="submit">Register</button>
             </fieldset>
         </form>
+
+
     </body>
 </template>
 
@@ -113,31 +115,24 @@ export default {
     }
 
     #login-container, #register-container {
-        width: 100%;
-        height: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
     #login-container {
+        grid-column: 3;
+        grid-row: 1/2;
+        display: flex;
+        flex-direction: column;
         padding-top: 10px;
         background-color: #d5ffca;
-        grid-column: 3;
-        grid-row: 1/4;
     }
 
     #register-container {
         background-color: white;
         grid-column: 3;
         grid-row: 3;
-        border-top-left-radius: 30px;
-        border-top-right-radius: 30px;
-    }
-
-    h1{
-        margin: 5px;
-        padding: 5px;
     }
 
     label {
@@ -148,22 +143,18 @@ export default {
         gap: 8px;
         margin-top: 10px;
     }
+
     fieldset {
-        width: 300px;
         margin-bottom: 10px;
-        margin-top: 10px;
         border: none;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding-top: 10px;
-        text-align: left;
         color: #1e1e1e;
     }
 
     input {
-        width: 250px;
         border-color: #c9c9c9;
         border-radius: 50px;
         padding: 10px;

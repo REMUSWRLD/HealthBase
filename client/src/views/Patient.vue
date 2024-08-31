@@ -317,7 +317,7 @@ export default {
 
       </section>
       
-      <section class="edit-add-container">
+      <section v-if="isEditing" class="edit-add-container">
 
         <section class="add-container">
 
